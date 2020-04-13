@@ -53,7 +53,7 @@ class Graph:
         while q.size() > 0:
             v = q.dequeue()
             if v not in visited:
-                # print(v)
+                print(v)
                 visited.add(v)
                 for n in self.get_neighbors(v):
                     q.enqueue(n)
@@ -79,8 +79,8 @@ class Graph:
         while s.size() > 0:
             v = s.pop()
             if v not in visited:
-                # print(v)
                 visited.add(v)
+                print(v)
                 for n in self.get_neighbors(v):
                     s.push(n)
 
@@ -99,7 +99,7 @@ class Graph:
         # either us a helper function inside or pass a cache
         if vertex in visited:
             return
-        # print(vertex)
+        print(vertex)
         visited.add(vertex)
         for n in self.get_neighbors(vertex):
             self.dft_recursive(n, visited)
@@ -167,7 +167,7 @@ class Graph:
                 for n in self.get_neighbors(v):
                     s.push(path + [n])
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, vertex, destination, path=[], visited=set()):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -175,7 +175,22 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        # check if vertex is visited...
+            # if so, return
+        # create a new_path from old_path + list(vertex)
+        # add vertex to visited
+        # if vertex is the destination..
+            # return new_path
+        # for each of the current vertex's neighbors..
+            # recursively call the function and pass in the neighbor, destination, new_path, and visited
+        if vertex in visited:
+            return
+        new_path = path + [vertex]
+        visited.add(vertex)
+        if vertex==destination:
+            return new_path
+        for n in self.get_neighbors(vertex):
+            self.dfs_recursive(n, destination, new_path, visited)
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
