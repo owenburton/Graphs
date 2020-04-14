@@ -30,10 +30,13 @@ def earliest_ancestor(ancestors, starting_node):
             # check if has no ancestors
             if not graph[v]:
                 if len(path)>len(longest_path):
-                    longest_path = path
+                    if not longest_path:
+                        longest_path = path 
+                    if path[-1] > longest_path[-1]:
+                        longest_path = path
             for n in graph[v]:
                 stack.append(path + [n])
-                
+
     # return the earliest ancestor or -1 if starting node doesn't have any ancestors
     ancestor = longest_path[-1]
     return -1 if ancestor==starting_node else ancestor
