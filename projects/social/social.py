@@ -1,5 +1,6 @@
 import random
 from collections import deque
+from itertools import combinations
 
 class User:
     def __init__(self, name):
@@ -54,10 +55,16 @@ class SocialGraph:
         # plan:
         # create a list with all possible friendship combos
         # shuffle the list, then get the first n elements
-        possible_friendships = []
-        for user_id in self.users:
-            for friend_id in range(user_id + 1, self.last_id + 1):
-                possible_friendships.append((user_id, friend_id))
+
+        #### O(n^2)
+        # possible_friendships = []
+        # for user_id in self.users:
+        #     for friend_id in range(user_id + 1, self.last_id + 1):
+        #         possible_friendships.append((user_id, friend_id))
+
+        #### O(nCk) or O(n choose k). k=2 in this case. ppl usually call k "r",
+        # because the default param name is called "r" --> itertools.combinations(iterable, r)
+        possible_friendships = list(combinations(self.users, 2))
 
         random.shuffle(possible_friendships)
 
@@ -98,3 +105,22 @@ if __name__ == '__main__':
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+
+# 3. Questions
+# To create 100 users with an average of 10 friends each, 
+# how many times would you need to call add_friendship()? Why?
+# ANSWER: 50, bc 2 users per friendship
+
+# If you create 1000 users with an average of 5 random friends each, 
+# what percentage of other users will be in a particular user's extended social network? 
+# What is the average degree of separation between a user and those in his/her extended network?
+
+# 4. Stretch Goal
+# You might have found the results from question #2 above to be surprising. 
+# Would you expect results like this in real life? 
+# If not, what are some ways you could improve your friendship 
+# distribution model for more realistic results?
+
+# If you followed the hints for part 1, your populate_graph() will run in O(n^2) time. 
+# Refactor your code to run in O(n) time. 
+# Are there any tradeoffs that come with this implementation?
