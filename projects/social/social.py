@@ -47,9 +47,10 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
 
-        # Add users
-        for i in range(num_users):
-            self.add_user(f"User {i+1}")
+        # Add users and edges between a user and themself 
+        for i in range(1, num_users+1):
+            self.add_user(f"User {i}")
+            self.friendships[i] = set([i])
 
         # Create friendships
         # plan:
@@ -64,16 +65,29 @@ class SocialGraph:
 
         #### O(nCk) or O(n choose k). k=2 in this case. ppl usually call k "r",
         # because the default param name is called "r" --> itertools.combinations(iterable, r)
-        possible_friendships = list(combinations(self.users, 2))
+        # possible_friendships = list(combinations(self.users, 2))
 
-        random.shuffle(possible_friendships)
+        # random.shuffle(possible_friendships)
 
         # Create n friendships where n = avg_frindships * num_users // 2
         # avg_frindships = total_friendships / num_users
         # total_frindships = avg_friendships * num_users
-        for i in range(num_users * avg_friendships // 2):
-            f1, f2 = possible_friendships[i]
-            self.add_friendship(f1, f2)
+        # for i in range(num_users * avg_friendships // 2):
+        #     f1, f2 = possible_friendships[i]
+        #     self.add_friendship(f1, f2)
+
+        #### O(n)
+        def guess(): return random.randint(1, self.last_id)
+
+        for _ in range(num_users * avg_friendships // 2):
+            added = False
+            while not added:
+                f1, f2 = (guess(), guess())
+                if f2 not in self.friendships[f1]:
+                    self.add_friendship(f1, f2)
+                    added = True
+
+            
 
 
     def get_all_social_paths(self, user_id):
@@ -87,7 +101,7 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # do a bfs
-        # add each path to visited as value, and each last fren in path as key
+        # add each path to visited dict as value, and each last fren in path as key
         q = deque([[user_id]])
         while len(q)>0:
             path = q.pop()
@@ -109,7 +123,7 @@ if __name__ == '__main__':
 # 3. Questions
 # To create 100 users with an average of 10 friends each, 
 # how many times would you need to call add_friendship()? Why?
-# ANSWER: 50, bc 2 users per friendship
+# 500 times, there's 500 pairs of friends. add_frindhsip() takes care of on pair each time
 
 # If you create 1000 users with an average of 5 random friends each, 
 # what percentage of other users will be in a particular user's extended social network? 
