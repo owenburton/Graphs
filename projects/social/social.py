@@ -1,4 +1,5 @@
 import random
+from collections import deque
 
 class User:
     def __init__(self, name):
@@ -44,7 +45,6 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
         for i in range(num_users):
@@ -79,7 +79,16 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        # do a bfs
+        # add each path to visited as value, and each last fren in path as key
+        q = deque([[user_id]])
+        while len(q)>0:
+            path = q.pop()
+            v = path[-1]
+            if v not in visited:
+                visited[v] = path
+                for n in self.friendships[v]:
+                    q.appendleft(path + [n])
         return visited
 
 
@@ -87,5 +96,5 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
-    # connections = sg.get_all_social_paths(1)
-    # print(connections)
+    connections = sg.get_all_social_paths(1)
+    print(connections)
